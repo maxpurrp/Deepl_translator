@@ -5,43 +5,31 @@ class Database:
 
     database_cred = {
 
-        "host": "localhost",
+        "host": "host.docker.internal",
 
-        "user": "max",
+        "user": "user",
 
-        "password": "1234",
+        "password": "password",
 
         "database": "Users",
 
-        "autocommit": True,  # making sure updated, inserts, deletions are commited for every query
+        "autocommit": True,
 
         "cursorclass": pymysql.cursors.DictCursor,
 
     }
 
     def __init__(self):
-        db_exists = False
         self.conn = pymysql.connect(host=self.database_cred['host'],
                                     user=self.database_cred['user'],
                                     password=self.database_cred['password'])
-        cursor = self.conn.cursor()
-        cursor.execute('show databases')
-        res = cursor.fetchall()
-        for elem in res:
-            if self.database_cred['database'] in elem:
-                db_exists = True
-        if not db_exists:
-            cursor.execute('create database Users')
+        with self.conn.cursor() as cursor:
             cursor.execute('use Users')
-            cursor.execute('create table translations (name varchar(255) not null, original_text varchar(255) not null, translate varchar(255) not null)')
-
-        cursor.execute('use Users')
+            cursor.execute('create table if not exists translations (name varchar(255) not null, original_text varchar(255) not null, translate varchar(255) not null)')
 
     def add_info(self, user, dest, src):
 
-        # to check DB Connection pin the instance
         try:
-            self.conn.ping()
 
             with self.conn.cursor() as cursor:
 
@@ -49,12 +37,8 @@ class Database:
 
                 self.conn.commit()
 
-                result = cursor.fetchall()
-
         except pymysql.Error as e:
             print(e)
-
-        return result
 
     def get_users(self):
         try:

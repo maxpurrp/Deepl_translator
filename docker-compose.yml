@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+
+  db:
+    image: mysql:latest
+    container_name: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: unless-stopped
+    environment:
+      MYSQL_USER: user
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: Users
+    volumes:
+    - my-db:/var/lib/mysql
+    ports:
+    - '3306:3306'
+
+  telegram-bot:
+    container_name: Deepl_translator
+    working_dir: /
+    restart: always
+    build:
+        context: .
+        dockerfile: Dockerfile
+    command: sh -c "python main.py"
+
+
+
+volumes:
+  my-db:
+
+networks:
+  backend:
+    enable_ipv6: false
+    driver: bridge
+
+  
