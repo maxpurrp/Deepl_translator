@@ -17,7 +17,7 @@ bot = Bot(TOKEN)
 dp = Dispatcher()
 
 if os.name == 'posix':
-    database_cred['host'] = '127.0.0.1'
+    database_cred['host'] = '172.17.0.1'
 db = Database()
 
 
