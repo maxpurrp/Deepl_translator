@@ -1,7 +1,9 @@
-from config import TOKEN
+from config import TOKEN, database_cred
 import asyncio
 import logging
 import sys
+import os
+
 
 from aiogram import Bot, Dispatcher, F
 from aiogram import types
@@ -14,7 +16,10 @@ from db import Database
 bot = Bot(TOKEN)
 dp = Dispatcher()
 
+if os.name == 'posix':
+    database_cred['host'] = '127.0.0.1'
 db = Database()
+
 
 
 @dp.message(F.text == '/start')

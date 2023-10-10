@@ -1,28 +1,12 @@
 import pymysql
-
+from config import database_cred
 
 class Database:
 
-    database_cred = {
-
-        "host": "host.docker.internal",
-
-        "user": "user",
-
-        "password": "password",
-
-        "database": "Users",
-
-        "autocommit": True,
-
-        "cursorclass": pymysql.cursors.DictCursor,
-
-    }
-
     def __init__(self):
-        self.conn = pymysql.connect(host=self.database_cred['host'],
-                                    user=self.database_cred['user'],
-                                    password=self.database_cred['password'])
+        self.conn = pymysql.connect(host=database_cred['host'],
+                                    user=database_cred['user'],
+                                    password=database_cred['password'])
         with self.conn.cursor() as cursor:
             cursor.execute('use Users')
             cursor.execute('create table if not exists translations (name varchar(255) not null, original_text varchar(255) not null, translate varchar(255) not null)')
